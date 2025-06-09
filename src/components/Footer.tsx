@@ -3,22 +3,23 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-slate-900 text-white">
+    <footer className="bg-restaurant-brown text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Restaurant Info */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Spice Heritage</h3>
+            <h3 className="text-xl font-bold mb-4 text-restaurant-gold">Hyderabad Cafe Waterloo</h3>
             <div className="space-y-2 text-gray-300">
-              <p>123 Flavor Street</p>
-              <p>Spice City, SC 12345</p>
-              <p>Phone: (555) 123-4567</p>
+              <p>Unit: 105, 318 Spruce St.</p>
+              <p>Waterloo, ON</p>
+              <p>Phone: +1 (548) 889-5694</p>
+              <p>Email: hyderabadcafewaterloo@gmail.com</p>
             </div>
           </div>
 
           {/* Hours */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Hours</h3>
+            <h3 className="text-xl font-bold mb-4 text-restaurant-gold">Hours</h3>
             <div className="space-y-2 text-gray-300">
               <p>Monday - Thursday: 11:00 AM - 10:00 PM</p>
               <p>Friday - Saturday: 11:00 AM - 11:00 PM</p>
@@ -28,16 +29,16 @@ const Footer = () => {
 
           {/* Newsletter */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Stay Connected</h3>
+            <h3 className="text-xl font-bold mb-4 text-restaurant-gold">Stay Connected</h3>
             <div className="space-y-4">
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-300 hover:text-orange-400 transition-colors">
+                <a href="#" className="text-gray-300 hover:text-restaurant-gold transition-colors">
                   Facebook
                 </a>
-                <a href="#" className="text-gray-300 hover:text-orange-400 transition-colors">
+                <a href="#" className="text-gray-300 hover:text-restaurant-gold transition-colors">
                   Instagram
                 </a>
-                <a href="#" className="text-gray-300 hover:text-orange-400 transition-colors">
+                <a href="#" className="text-gray-300 hover:text-restaurant-gold transition-colors">
                   Google
                 </a>
               </div>
@@ -50,9 +51,9 @@ const Footer = () => {
                     type="email"
                     id="newsletter"
                     placeholder="Enter your email"
-                    className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-l-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-l-md focus:outline-none focus:ring-2 focus:ring-restaurant-gold text-white"
                   />
-                  <button className="px-4 py-2 bg-orange-600 text-white rounded-r-md hover:bg-orange-700 transition-colors">
+                  <button className="px-4 py-2 bg-restaurant-gold text-restaurant-brown rounded-r-md hover:bg-restaurant-light-gold transition-colors font-medium">
                     Subscribe
                   </button>
                 </div>
@@ -62,7 +63,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 Spice Heritage. All rights reserved.</p>
+          <p>&copy; 2024 Hyderabad Cafe Waterloo. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Plus, Minus, ShoppingCart } from 'lucide-react';
+import { Plus, Minus, ShoppingCart, Star } from 'lucide-react';
 import { useCart, MenuItem } from '../hooks/useCart';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -15,34 +14,45 @@ const Menu = () => {
     return cartItem ? cartItem.quantity : 0;
   };
 
-  const menuItems: MenuItem[] = [
+  const getSpiceLevel = (spiceLevel: number) => {
+    const chilis = '🌶️'.repeat(spiceLevel);
+    const labels = ['', 'Mild', 'Medium', 'Spicy'];
+    return (
+      <span className="spice-indicator text-sm">
+        <span>{chilis}</span>
+        <span className="text-muted-foreground">({labels[spiceLevel]})</span>
+      </span>
+    );
+  };
+
+  const menuItems: (MenuItem & { spiceLevel?: number; isSpecial?: boolean; description: string })[] = [
     // Soups
-    { id: 'soup-1', name: 'Manchow Soup', description: 'Served with Fried Noodles', price: 5.99, category: 'Soups', isVeg: true },
-    { id: 'soup-2', name: 'SweetCorn Soup', description: 'Sweet, warm, and sour', price: 5.99, category: 'Soups', isVeg: true },
-    { id: 'soup-3', name: 'Manchow Soup', description: 'Served with Fried Noodles', price: 5.99, category: 'Soups', isVeg: false },
-    { id: 'soup-4', name: 'SweetCorn Soup', description: 'Sweet, warm, and sour', price: 5.99, category: 'Soups', isVeg: false },
-    { id: 'soup-5', name: 'Mutton Marag', description: 'Served with Fried Onions', price: 6.99, category: 'Soups', isVeg: false },
-    { id: 'soup-6', name: 'Mutton Paya', description: '', price: 6.99, category: 'Soups', isVeg: false },
+    { id: 'soup-1', name: 'Manchow Soup', description: 'A hearty Indo-Chinese soup with vegetables and crispy fried noodles on top', price: 5.99, category: 'Soups', isVeg: true, spiceLevel: 2 },
+    { id: 'soup-2', name: 'SweetCorn Soup', description: 'Creamy sweet corn soup with a perfect balance of sweet and tangy flavors', price: 5.99, category: 'Soups', isVeg: true, spiceLevel: 1 },
+    { id: 'soup-3', name: 'Manchow Soup', description: 'Rich chicken and vegetable soup with aromatic spices and fried noodles', price: 5.99, category: 'Soups', isVeg: false, spiceLevel: 2 },
+    { id: 'soup-4', name: 'SweetCorn Soup', description: 'Silky smooth chicken and sweet corn soup with egg ribbons', price: 5.99, category: 'Soups', isVeg: false, spiceLevel: 1 },
+    { id: 'soup-5', name: 'Mutton Marag', description: 'Traditional Hyderabadi bone marrow soup with aromatic spices and fried onions', price: 6.99, category: 'Soups', isVeg: false, spiceLevel: 2, isSpecial: true },
+    { id: 'soup-6', name: 'Mutton Paya', description: 'Slow-cooked trotters in rich, gelatinous broth - a Hyderabadi delicacy', price: 6.99, category: 'Soups', isVeg: false, spiceLevel: 2, isSpecial: true },
 
     // Appetizers
-    { id: 'app-1', name: 'Crispy Corn', description: '', price: 14.99, category: 'Appetizers', isVeg: true },
-    { id: 'app-2', name: 'Lemon Coriander Paneer', description: '', price: 14.99, category: 'Appetizers', isVeg: true },
-    { id: 'app-3', name: 'Karivepaku Corn', description: '', price: 14.99, category: 'Appetizers', isVeg: true },
-    { id: 'app-4', name: 'Street Side Corn', description: '', price: 14.99, category: 'Appetizers', isVeg: true },
-    { id: 'app-5', name: 'Gobi 65', description: '', price: 14.99, category: 'Appetizers', isVeg: true },
-    { id: 'app-6', name: 'Chilli Paneer', description: '', price: 14.99, category: 'Appetizers', isVeg: true },
-    { id: 'app-7', name: 'Gobi Manchurian', description: '', price: 14.99, category: 'Appetizers', isVeg: true },
-    { id: 'app-8', name: 'Veg Manchurian', description: '', price: 14.99, category: 'Appetizers', isVeg: true },
-    { id: 'app-9', name: 'Chicken Majestic', description: '', price: 15.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-10', name: 'Katarnak Kodi Pakoda', description: '', price: 15.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-11', name: 'Chicken 65', description: '', price: 15.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-12', name: 'Chilli Chicken', description: '', price: 15.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-13', name: 'Dragon Chicken', description: '', price: 15.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-14', name: 'Andhra Karam Kodi', description: '', price: 15.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-15', name: 'Mutton Ghee Roast', description: '', price: 16.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-16', name: 'Fish Pakoda', description: '', price: 17.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-17', name: 'Chilli Garlic Prawns', description: '', price: 17.99, category: 'Appetizers', isVeg: false },
-    { id: 'app-18', name: 'Chilli Fish', description: '', price: 17.99, category: 'Appetizers', isVeg: false },
+    { id: 'app-1', name: 'Crispy Corn', description: 'Golden corn kernels tossed with spices and herbs', price: 14.99, category: 'Appetizers', isVeg: true, spiceLevel: 2 },
+    { id: 'app-2', name: 'Lemon Coriander Paneer', description: 'Soft paneer cubes in tangy lemon and fresh coriander marinade', price: 14.99, category: 'Appetizers', isVeg: true, spiceLevel: 1 },
+    { id: 'app-3', name: 'Karivepaku Corn', description: 'Corn kernels infused with aromatic curry leaves and South Indian spices', price: 14.99, category: 'Appetizers', isVeg: true, spiceLevel: 2 },
+    { id: 'app-4', name: 'Street Side Corn', description: 'Chargrilled corn with butter, lime, and chaat masala', price: 14.99, category: 'Appetizers', isVeg: true, spiceLevel: 2 },
+    { id: 'app-5', name: 'Gobi 65', description: 'Spicy cauliflower florets marinated and deep-fried to perfection', price: 14.99, category: 'Appetizers', isVeg: true, spiceLevel: 3 },
+    { id: 'app-6', name: 'Chilli Paneer', description: 'Indo-Chinese favorite with soft paneer in spicy sauce', price: 14.99, category: 'Appetizers', isVeg: true, spiceLevel: 3 },
+    { id: 'app-7', name: 'Gobi Manchurian', description: 'Crispy cauliflower balls in sweet and spicy Manchurian sauce', price: 14.99, category: 'Appetizers', isVeg: true, spiceLevel: 2 },
+    { id: 'app-8', name: 'Veg Manchurian', description: 'Mixed vegetable dumplings in tangy Manchurian gravy', price: 14.99, category: 'Appetizers', isVeg: true, spiceLevel: 2 },
+    { id: 'app-9', name: 'Chicken Majestic', description: 'Royal preparation of chicken strips with cashews and aromatic spices', price: 15.99, category: 'Appetizers', isVeg: false, spiceLevel: 2, isSpecial: true },
+    { id: 'app-10', name: 'Katarnak Kodi Pakoda', description: 'Explosive chicken fritters with intense Andhra spices', price: 15.99, category: 'Appetizers', isVeg: false, spiceLevel: 3 },
+    { id: 'app-11', name: 'Chicken 65', description: 'Legendary spicy chicken appetizer from Chennai', price: 15.99, category: 'Appetizers', isVeg: false, spiceLevel: 3, isSpecial: true },
+    { id: 'app-12', name: 'Chilli Chicken', description: 'Popular Indo-Chinese dish with tender chicken in spicy sauce', price: 15.99, category: 'Appetizers', isVeg: false, spiceLevel: 3 },
+    { id: 'app-13', name: 'Dragon Chicken', description: 'Fiery chicken preparation with bold flavors and vibrant colors', price: 15.99, category: 'Appetizers', isVeg: false, spiceLevel: 3 },
+    { id: 'app-14', name: 'Andhra Karam Kodi', description: 'Traditional Andhra-style spicy chicken with red chilies', price: 15.99, category: 'Appetizers', isVeg: false, spiceLevel: 3 },
+    { id: 'app-15', name: 'Mutton Ghee Roast', description: 'Succulent mutton pieces roasted in clarified butter and spices', price: 16.99, category: 'Appetizers', isVeg: false, spiceLevel: 2, isSpecial: true },
+    { id: 'app-16', name: 'Fish Pakoda', description: 'Fresh fish marinated in spices and gram flour, deep-fried', price: 17.99, category: 'Appetizers', isVeg: false, spiceLevel: 2 },
+    { id: 'app-17', name: 'Chilli Garlic Prawns', description: 'Juicy prawns tossed with garlic and green chilies', price: 17.99, category: 'Appetizers', isVeg: false, spiceLevel: 3 },
+    { id: 'app-18', name: 'Chilli Fish', description: 'Batter-fried fish in spicy Indo-Chinese sauce', price: 17.99, category: 'Appetizers', isVeg: false, spiceLevel: 3 },
 
     // Tikkas
     { id: 'tikka-1', name: 'Soya Chaap', description: '', price: 14.99, category: 'Tikkas', isVeg: true },
@@ -223,8 +233,15 @@ const Menu = () => {
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Our Menu</h1>
-            <p className="text-xl text-muted-foreground">Discover our authentic South Asian flavors</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-restaurant-brown mb-4">Our Menu</h1>
+            <p className="text-xl text-muted-foreground mb-6">Discover our authentic Hyderabadi flavors</p>
+            
+            {/* Spice Level Callout */}
+            <div className="bg-restaurant-light-gold/20 border border-restaurant-gold/30 rounded-lg p-4 max-w-2xl mx-auto">
+              <p className="text-restaurant-brown font-medium">
+                🌶️ We recommend trying our specials — and yes, we're happy to go easy or bold on the spice! 🌶️
+              </p>
+            </div>
           </div>
 
           {/* Filters */}
@@ -236,8 +253,8 @@ const Menu = () => {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     selectedCategory === category
-                      ? 'bg-orange-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-restaurant-gold text-white'
+                      : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
                   }`}
                 >
                   {category === 'all' ? 'All Categories' : category}
@@ -250,8 +267,8 @@ const Menu = () => {
                 onClick={() => setFilter('all')}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   filter === 'all'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-restaurant-brown text-white'
+                    : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
                 }`}
               >
                 All
@@ -260,8 +277,8 @@ const Menu = () => {
                 onClick={() => setFilter('veg')}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   filter === 'veg'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-restaurant-brown text-white'
+                    : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
                 }`}
               >
                 🟢 Vegetarian
@@ -270,8 +287,8 @@ const Menu = () => {
                 onClick={() => setFilter('non-veg')}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   filter === 'non-veg'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-restaurant-brown text-white'
+                    : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
                 }`}
               >
                 🔴 Non-Vegetarian
@@ -286,33 +303,47 @@ const Menu = () => {
               const itemKey = `${item.id}-${item.option || 'default'}`;
               
               return (
-                <div key={itemKey} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div key={itemKey} className="bg-card rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 border border-border hover:border-restaurant-gold/50">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-lg font-semibold text-foreground">{item.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-semibold text-restaurant-brown">{item.name}</h3>
+                      {item.isSpecial && (
+                        <div className="flex items-center gap-1 bg-restaurant-gold text-white px-2 py-1 rounded-full text-xs font-medium">
+                          <Star className="w-3 h-3" />
+                          Special
+                        </div>
+                      )}
+                    </div>
                     <span className={`text-lg ${item.isVeg ? 'text-green-600' : 'text-red-600'}`}>
                       {item.isVeg ? '🟢' : '🔴'}
                     </span>
                   </div>
                   
                   {item.description && (
-                    <p className="text-muted-foreground text-sm mb-3">{item.description}</p>
+                    <p className="text-muted-foreground text-sm mb-3 line-clamp-2">{item.description}</p>
+                  )}
+                  
+                  {item.spiceLevel && (
+                    <div className="mb-3">
+                      {getSpiceLevel(item.spiceLevel)}
+                    </div>
                   )}
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold text-orange-600">${item.price}</span>
+                    <span className="text-xl font-bold text-restaurant-gold">${item.price}</span>
                     
                     {currentQuantity > 0 ? (
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => handleQuantityChange(item, currentQuantity - 1)}
-                          className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center hover:bg-orange-200 transition-colors"
+                          className="w-8 h-8 rounded-full bg-restaurant-light-gold text-restaurant-brown flex items-center justify-center hover:bg-restaurant-gold hover:text-white transition-colors"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="font-semibold min-w-[20px] text-center">{currentQuantity}</span>
+                        <span className="font-semibold min-w-[20px] text-center text-restaurant-brown">{currentQuantity}</span>
                         <button
                           onClick={() => handleQuantityChange(item, currentQuantity + 1)}
-                          className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center hover:bg-orange-200 transition-colors"
+                          className="w-8 h-8 rounded-full bg-restaurant-light-gold text-restaurant-brown flex items-center justify-center hover:bg-restaurant-gold hover:text-white transition-colors"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
@@ -320,7 +351,7 @@ const Menu = () => {
                     ) : (
                       <button
                         onClick={() => handleAddToCart(item)}
-                        className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                        className="bg-restaurant-gold hover:bg-restaurant-brown text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
                       >
                         <ShoppingCart className="w-4 h-4" />
                         Add to Cart

@@ -22,11 +22,14 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">S</span>
+          <Link to="/" className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-restaurant-gold to-restaurant-brown rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">H</span>
             </div>
-            <span className="text-xl font-bold text-foreground">Spice Heritage</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-restaurant-brown">Hyderabad Cafe</span>
+              <span className="text-xs text-muted-foreground">Waterloo</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -35,9 +38,9 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-medium transition-colors hover:text-orange-600 ${
+                className={`text-sm font-medium transition-colors hover:text-restaurant-gold ${
                   location.pathname === item.href
-                    ? 'text-orange-600'
+                    ? 'text-restaurant-gold'
                     : 'text-muted-foreground'
                 }`}
               >
@@ -48,18 +51,18 @@ const Header = () => {
 
           {/* Social Media & Cart */}
           <div className="hidden md:flex items-center space-x-4">
-            <a href="#" className="text-muted-foreground hover:text-orange-600 transition-colors">
+            <a href="#" className="text-muted-foreground hover:text-restaurant-gold transition-colors">
               <span className="sr-only">Facebook</span>
               <div className="w-5 h-5 bg-current rounded"></div>
             </a>
-            <a href="#" className="text-muted-foreground hover:text-orange-600 transition-colors">
+            <a href="#" className="text-muted-foreground hover:text-restaurant-gold transition-colors">
               <span className="sr-only">Instagram</span>
               <div className="w-5 h-5 bg-current rounded"></div>
             </a>
             <Link to="/menu" className="relative">
-              <ShoppingCart className="w-6 h-6 text-muted-foreground hover:text-orange-600 transition-colors" />
+              <ShoppingCart className="w-6 h-6 text-muted-foreground hover:text-restaurant-gold transition-colors" />
               {getTotalItems() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-orange-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-restaurant-gold text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {getTotalItems()}
                 </span>
               )}
@@ -85,8 +88,8 @@ const Header = () => {
                   to={item.href}
                   className={`block px-3 py-2 text-base font-medium transition-colors ${
                     location.pathname === item.href
-                      ? 'text-orange-600'
-                      : 'text-muted-foreground hover:text-orange-600'
+                      ? 'text-restaurant-gold'
+                      : 'text-muted-foreground hover:text-restaurant-gold'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -97,7 +100,7 @@ const Header = () => {
                 <Link to="/menu" className="relative">
                   <ShoppingCart className="w-6 h-6 text-muted-foreground" />
                   {getTotalItems() > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-orange-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    <span className="absolute -top-2 -right-2 bg-restaurant-gold text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                       {getTotalItems()}
                     </span>
                   )}
