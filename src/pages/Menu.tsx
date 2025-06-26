@@ -31,7 +31,7 @@ const Menu = () => {
     { id: 'soup-2', name: 'SweetCorn Soup', description: 'Creamy sweet corn soup with a perfect balance of sweet and tangy flavors', price: 5.99, category: 'Soups', isVeg: true, spiceLevel: 1 },
     { id: 'soup-3', name: 'Manchow Soup', description: 'Rich chicken and vegetable soup with aromatic spices and fried noodles', price: 5.99, category: 'Soups', isVeg: false, spiceLevel: 2 },
     { id: 'soup-4', name: 'SweetCorn Soup', description: 'Silky smooth chicken and sweet corn soup with egg ribbons', price: 5.99, category: 'Soups', isVeg: false, spiceLevel: 1 },
-    { id: 'soup-5', name: 'Mutton Marag', description: 'Traditional Hyderabadi bone marrow soup with aromatic spices and fried onions', price: 6.99, category: 'Soups', isVeg: false, spiceLevel: 2, isSpecial: true },
+    { id: 'soup-5', name: 'Mutton Marag', description: 'Traditional Hyderabadi bone marrow soup with aromatic spices and fried onions', price: 7.99, category: 'Soups', isVeg: false, spiceLevel: 2, isSpecial: true },
     { id: 'soup-6', name: 'Mutton Paya', description: 'Slow-cooked trotters in rich, gelatinous broth - a Hyderabadi delicacy', price: 6.99, category: 'Soups', isVeg: false, spiceLevel: 2, isSpecial: true },
 
     // Appetizers
