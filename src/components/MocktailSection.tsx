@@ -1,366 +1,462 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Minus, Droplets, Sparkles } from 'lucide-react';
+import { Plus, Minus, Sparkles, ChefHat } from 'lucide-react';
 import { useCart, MenuItem } from '../hooks/useCart';
 
-interface MocktailItemProps extends MenuItem {
+interface MocktailItem extends MenuItem {
   description: string;
   ingredients: string[];
   imageUrl: string;
-  concept: 'refreshing' | 'sophisticated' | 'tropical';
+  categoryType: 'delights' | 'classics' | 'spicy';
   signature?: boolean;
 }
 
-const MocktailCard: React.FC<{ 
-  mocktail: MocktailItemProps; 
-  isInView: boolean;
+interface Category {
+  id: string;
+  name: string;
+  type: 'delights' | 'classics' | 'spicy';
+  items: MocktailItem[];
+}
+
+const MocktailDisplay: React.FC<{
+  mocktail: MocktailItem;
   addToCart: (item: MenuItem) => void;
   cartQuantity: number;
   updateQuantity: (id: string, quantity: number) => void;
-}> = ({ mocktail, isInView, addToCart, cartQuantity, updateQuantity }) => {
-  const [animationPhase, setAnimationPhase] = useState(0);
-  
-  useEffect(() => {
-    if (isInView) {
-      const phases = [0, 1, 2, 3, 4];
-      phases.forEach((phase, index) => {
-        setTimeout(() => setAnimationPhase(phase), index * 300);
-      });
-    } else {
-      setAnimationPhase(0);
-    }
-  }, [isInView]);
-
-  const getConceptStyles = () => {
-    switch (mocktail.concept) {
-      case 'refreshing':
+}> = ({ mocktail, addToCart, cartQuantity, updateQuantity }) => {
+  const getCategoryStyles = () => {
+    switch (mocktail.categoryType) {
+      case 'delights':
         return {
-          gradient: 'from-blue-900/20 via-cyan-900/20 to-green-900/20',
-          accent: 'border-cyan-400/30',
-          glow: 'shadow-cyan-400/20',
-          textAccent: 'text-cyan-300'
+          gradient: 'from-rose-900/30 via-pink-900/20 to-purple-900/30',
+          accent: 'text-rose-300',
+          glow: 'shadow-rose-500/30'
         };
-      case 'sophisticated':
+      case 'classics':
         return {
-          gradient: 'from-amber-900/20 via-yellow-900/20 to-orange-900/20',
-          accent: 'border-amber-400/30',
-          glow: 'shadow-amber-400/20',
-          textAccent: 'text-amber-300'
+          gradient: 'from-amber-900/30 via-orange-900/20 to-yellow-900/30',
+          accent: 'text-amber-300',
+          glow: 'shadow-amber-500/30'
         };
-      case 'tropical':
+      case 'spicy':
         return {
-          gradient: 'from-pink-900/20 via-orange-900/20 to-yellow-900/20',
-          accent: 'border-orange-400/30',
-          glow: 'shadow-orange-400/20',
-          textAccent: 'text-orange-300'
+          gradient: 'from-red-900/30 via-orange-900/20 to-yellow-900/30',
+          accent: 'text-orange-300',
+          glow: 'shadow-red-500/30'
         };
     }
   };
 
-  const styles = getConceptStyles();
+  const styles = getCategoryStyles();
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-8">
-      {/* Background Glass Effect */}
-      <div 
-        className={`absolute inset-0 bg-gradient-to-br ${styles.gradient} opacity-0 transition-all duration-1000 ${
-          animationPhase >= 1 ? 'opacity-100' : ''
-        }`}
-      />
+    <div className="relative h-screen flex flex-col justify-center items-center p-6">
+      {/* Gradient Background */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${styles.gradient} opacity-90`} />
       
-      {/* Main Content Container */}
-      <div className="relative z-10 max-w-md w-full">
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-sm mx-auto text-center">
         
-        {/* Mocktail Glass Container */}
+        {/* Mocktail Image/GIF Placeholder */}
         <div className="relative mb-8">
-          {/* Glass Silhouette */}
-          <div 
-            className={`w-80 h-96 mx-auto relative transition-all duration-700 ${
-              animationPhase >= 0 ? 'opacity-100' : 'opacity-30'
-            }`}
-          >
-            {/* Base Glass Shape */}
-            <div className={`absolute inset-0 rounded-t-full border-2 ${styles.accent} transition-all duration-500 ${
-              animationPhase >= 1 ? `shadow-lg ${styles.glow}` : ''
-            }`}>
-              
-              {/* Liquid Fill */}
-              <div 
-                className={`absolute bottom-0 left-2 right-2 bg-gradient-to-t ${styles.gradient} rounded-b-full transition-all duration-800 ${
-                  animationPhase >= 2 ? 'h-3/4' : 'h-0'
-                }`}
-              />
-              
-              {/* Garnish & Effects */}
-              <div className={`absolute top-4 left-1/2 transform -translate-x-1/2 transition-all duration-500 ${
-                animationPhase >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-              }`}>
-                <Sparkles className={`w-6 h-6 ${styles.textAccent}`} />
-              </div>
-              
-              {/* Condensation Effect */}
-              <div className={`absolute inset-0 rounded-t-full transition-opacity duration-700 ${
-                animationPhase >= 4 ? 'opacity-100' : 'opacity-0'
-              }`}>
-                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/30 rounded-full animate-pulse" />
-                <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-white/20 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-                <div className="absolute top-1/2 left-1/3 w-1.5 h-1.5 bg-white/25 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className={`w-80 h-80 mx-auto rounded-full bg-gradient-to-br ${styles.gradient} border-2 border-primary/30 ${styles.glow} shadow-2xl flex items-center justify-center overflow-hidden`}>
+            {/* Placeholder rotating effect */}
+            <div className="w-64 h-64 rounded-full bg-gradient-to-tr from-primary/40 to-accent/40 animate-spin-slow flex items-center justify-center">
+              <div className="w-48 h-48 rounded-full bg-gradient-to-br from-background/80 to-muted/80 flex items-center justify-center">
+                <Sparkles className={`w-16 h-16 ${styles.accent} animate-pulse`} />
               </div>
             </div>
-          </div>
-          
-          {/* Floating Ingredients */}
-          <div className="absolute inset-0 pointer-events-none">
-            {mocktail.ingredients.slice(0, 3).map((ingredient, index) => (
-              <div
-                key={ingredient}
-                className={`absolute text-xs ${styles.textAccent} bg-black/60 px-2 py-1 rounded-full transition-all duration-500 ${
-                  animationPhase >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}
-                style={{
-                  left: `${20 + index * 25}%`,
-                  top: `${30 + index * 15}%`,
-                  transitionDelay: `${index * 200}ms`
-                }}
-              >
-                {ingredient}
-              </div>
-            ))}
           </div>
         </div>
 
-        {/* Text Content */}
-        <div className={`text-center space-y-4 transition-all duration-700 ${
-          animationPhase >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          
-          {/* Signature Badge */}
-          {mocktail.signature && (
-            <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full border ${styles.accent} ${styles.textAccent} text-sm`}>
-              <Droplets className="w-4 h-4" />
-              Signature Creation
-            </div>
-          )}
-          
-          {/* Mocktail Name */}
-          <h2 className="text-3xl font-bold text-primary">{mocktail.name}</h2>
-          
-          {/* Description */}
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            {mocktail.description}
-          </p>
-          
-          {/* Ingredients */}
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            {mocktail.ingredients.map((ingredient) => (
-              <span
-                key={ingredient}
-                className={`px-3 py-1 rounded-full text-sm border ${styles.accent} ${styles.textAccent}`}
+        {/* Signature Badge */}
+        {mocktail.signature && (
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/40 mb-4">
+            <ChefHat className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium text-primary">Chef's Special</span>
+          </div>
+        )}
+
+        {/* Mocktail Name */}
+        <h2 className="text-3xl font-bold text-foreground mb-3">{mocktail.name}</h2>
+
+        {/* Price */}
+        <div className="text-2xl font-bold text-primary mb-4">${mocktail.price}</div>
+
+        {/* Description */}
+        <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+          {mocktail.description}
+        </p>
+
+        {/* Ingredients */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {mocktail.ingredients.map((ingredient, index) => (
+            <span
+              key={ingredient}
+              className={`px-3 py-1 rounded-full text-xs border border-primary/30 ${styles.accent} bg-primary/10`}
+            >
+              {ingredient}
+            </span>
+          ))}
+        </div>
+
+        {/* Add to Cart */}
+        <div className="flex justify-center">
+          {cartQuantity > 0 ? (
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => updateQuantity(mocktail.id, Math.max(0, cartQuantity - 1))}
+                className="w-10 h-10 rounded-full bg-muted/80 border border-primary/30 flex items-center justify-center hover:bg-primary/20 transition-all"
               >
-                {ingredient}
-              </span>
-            ))}
-          </div>
-          
-          {/* Price & Actions */}
-          <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
-            <span className="text-2xl font-bold text-primary">${mocktail.price}</span>
-            
-            <div className="flex items-center gap-3">
-              {cartQuantity > 0 ? (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => updateQuantity(mocktail.id, Math.max(0, cartQuantity - 1))}
-                    className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-accent transition-colors"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </button>
-                  <span className="w-8 text-center font-medium">{cartQuantity}</span>
-                  <button
-                    onClick={() => updateQuantity(mocktail.id, cartQuantity + 1)}
-                    className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => addToCart(mocktail)}
-                  className={`px-6 py-2 rounded-full border-2 ${styles.accent} ${styles.textAccent} hover:bg-current hover:bg-opacity-10 transition-all duration-300`}
-                >
-                  Add to Cart
-                </button>
-              )}
+                <Minus className="w-5 h-5" />
+              </button>
+              <span className="text-xl font-semibold w-8 text-center">{cartQuantity}</span>
+              <button
+                onClick={() => updateQuantity(mocktail.id, cartQuantity + 1)}
+                className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-all"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
             </div>
-          </div>
+          ) : (
+            <button
+              onClick={() => addToCart(mocktail)}
+              className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all transform hover:scale-105"
+            >
+              Add to Cart
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
+const CategoryNavigation: React.FC<{
+  categories: Category[];
+  activeCategory: string;
+  activeMocktail: string;
+  onCategorySelect: (categoryId: string) => void;
+  onMocktailSelect: (mocktailId: string) => void;
+}> = ({ categories, activeCategory, activeMocktail, onCategorySelect, onMocktailSelect }) => {
+  return (
+    <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-50 space-y-1 max-h-[80vh] overflow-y-auto">
+      {categories.map((category) => (
+        <div key={category.id} className="space-y-1">
+          {/* Category Header */}
+          <button
+            onClick={() => onCategorySelect(category.id)}
+            className={`block w-full text-left px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+              activeCategory === category.id
+                ? 'bg-primary/20 text-primary border border-primary/40'
+                : 'bg-background/80 text-muted-foreground border border-border hover:bg-muted/50'
+            }`}
+          >
+            {category.name}
+          </button>
+          
+          {/* Category Items */}
+          {activeCategory === category.id && (
+            <div className="pl-2 space-y-1">
+              {category.items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onMocktailSelect(item.id)}
+                  className={`block w-full text-left px-3 py-1.5 rounded text-xs transition-all ${
+                    activeMocktail === item.id
+                      ? 'bg-accent/30 text-accent-foreground border border-accent/50'
+                      : 'bg-background/60 text-muted-foreground border border-border/50 hover:bg-muted/30'
+                  }`}
+                >
+                  {item.name}
+                  {item.signature && (
+                    <span className="ml-1 text-primary">★</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const MocktailSection: React.FC = () => {
   const { addToCart, items: cartItems, updateQuantity } = useCart();
-  const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const [activeCategory, setActiveCategory] = useState('delights');
+  const [activeMocktail, setActiveMocktail] = useState('');
+  const [displayMocktail, setDisplayMocktail] = useState<MocktailItem | null>(null);
 
   const getCartQuantity = (itemId: string) => {
     const cartItem = cartItems.find(item => item.id === itemId);
     return cartItem ? cartItem.quantity : 0;
   };
 
-  const mocktails: MocktailItemProps[] = [
+  const categories: Category[] = [
     {
-      id: 'mocktail-1',
-      name: 'Tropical Paradise',
-      description: 'A vibrant blend of fresh pineapple, mango, and passion fruit with a hint of mint and lime zest',
-      price: 7.99,
-      category: 'Mocktails',
-      isVeg: true,
-      ingredients: ['Pineapple', 'Mango', 'Passion Fruit', 'Mint', 'Lime'],
-      imageUrl: '',
-      concept: 'tropical',
-      signature: true
+      id: 'delights',
+      name: 'Delights',
+      type: 'delights',
+      items: [
+        {
+          id: 'lichi-delight',
+          name: 'Lichi Delight',
+          description: 'Sweet and fragrant lychee with a burst of tropical freshness',
+          price: 7.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Lychee', 'Mint', 'Lime', 'Sparkling Water'],
+          imageUrl: '',
+          categoryType: 'delights',
+          signature: true
+        },
+        {
+          id: 'mango-delight',
+          name: 'Mango Delight',
+          description: 'Creamy mango blend with hints of cardamom and rose',
+          price: 7.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Mango', 'Cardamom', 'Rose Water', 'Cream'],
+          imageUrl: '',
+          categoryType: 'delights'
+        },
+        {
+          id: 'kiwi-delight',
+          name: 'Kiwi Delight',
+          description: 'Tangy kiwi with fresh herbs and a touch of honey',
+          price: 7.49,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Kiwi', 'Mint', 'Honey', 'Lime'],
+          imageUrl: '',
+          categoryType: 'delights'
+        },
+        {
+          id: 'blueberry-delight',
+          name: 'Blueberry Delight',
+          description: 'Antioxidant-rich blueberries with lavender and lemon',
+          price: 8.49,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Blueberry', 'Lavender', 'Lemon', 'Agave'],
+          imageUrl: '',
+          categoryType: 'delights'
+        },
+        {
+          id: 'strawberry-delight',
+          name: 'Strawberry Delight',
+          description: 'Fresh strawberries with basil and balsamic reduction',
+          price: 7.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Strawberry', 'Basil', 'Balsamic', 'Soda'],
+          imageUrl: '',
+          categoryType: 'delights'
+        },
+        {
+          id: 'lime-delight',
+          name: 'Lime',
+          description: 'Classic lime with fresh herbs and sparkling finish',
+          price: 6.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Lime', 'Mint', 'Sugar', 'Soda'],
+          imageUrl: '',
+          categoryType: 'delights'
+        }
+      ]
     },
     {
-      id: 'mocktail-2',
-      name: 'Golden Sunset',
-      description: 'Sophisticated blend of fresh orange, ginger, and aromatic herbs topped with golden turmeric foam',
-      price: 8.99,
-      category: 'Mocktails',
-      isVeg: true,
-      ingredients: ['Orange', 'Ginger', 'Turmeric', 'Honey', 'Herbs'],
-      imageUrl: '',
-      concept: 'sophisticated',
-      signature: true
+      id: 'classics',
+      name: 'Classics',
+      type: 'classics',
+      items: [
+        {
+          id: 'pinacolada',
+          name: 'Pinacolada',
+          description: 'Tropical coconut and pineapple cream dream',
+          price: 8.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Pineapple', 'Coconut Cream', 'Coconut Milk', 'Ice'],
+          imageUrl: '',
+          categoryType: 'classics',
+          signature: true
+        },
+        {
+          id: 'daiquiri',
+          name: 'Daiquiri',
+          description: 'Refreshing lime and mint non-alcoholic classic',
+          price: 7.49,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Lime', 'Mint', 'Sugar', 'Soda'],
+          imageUrl: '',
+          categoryType: 'classics'
+        },
+        {
+          id: 'summer-sunset',
+          name: 'Summer Sunset',
+          description: 'Layered fruit medley with tropical sunset colors',
+          price: 8.49,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Orange', 'Mango', 'Grenadine', 'Soda'],
+          imageUrl: '',
+          categoryType: 'classics'
+        },
+        {
+          id: 'margarita',
+          name: 'Margarita',
+          description: 'Zesty lime with salt rim and agave sweetness',
+          price: 7.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Lime', 'Agave', 'Salt', 'Triple Sec'],
+          imageUrl: '',
+          categoryType: 'classics'
+        },
+        {
+          id: 'basil-mint',
+          name: 'Basil Mint',
+          description: 'Aromatic herb blend with cucumber and lime',
+          price: 7.49,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Basil', 'Mint', 'Cucumber', 'Lime'],
+          imageUrl: '',
+          categoryType: 'classics'
+        },
+        {
+          id: 'mojito',
+          name: 'Mojito',
+          description: 'Traditional mint and lime with sparkling water',
+          price: 7.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Mint', 'Lime', 'Sugar', 'Soda'],
+          imageUrl: '',
+          categoryType: 'classics',
+          signature: true
+        }
+      ]
     },
     {
-      id: 'mocktail-3',
-      name: 'Cucumber Mint Cooler',
-      description: 'Refreshing combination of crisp cucumber, fresh mint, and lime with a splash of sparkling water',
-      price: 6.99,
-      category: 'Mocktails',
-      isVeg: true,
-      ingredients: ['Cucumber', 'Mint', 'Lime', 'Sparkling Water'],
-      imageUrl: '',
-      concept: 'refreshing'
-    },
-    {
-      id: 'mocktail-4',
-      name: 'Spiced Mango Lassi',
-      description: 'Traditional Indian yogurt drink elevated with fresh mango, cardamom, and a touch of rose water',
-      price: 7.49,
-      category: 'Mocktails',
-      isVeg: true,
-      ingredients: ['Mango', 'Yogurt', 'Cardamom', 'Rose Water'],
-      imageUrl: '',
-      concept: 'sophisticated'
-    },
-    {
-      id: 'mocktail-5',
-      name: 'Berry Hibiscus Fizz',
-      description: 'Antioxidant-rich hibiscus tea infused with mixed berries and topped with effervescent bubbles',
-      price: 7.99,
-      category: 'Mocktails',
-      isVeg: true,
-      ingredients: ['Hibiscus', 'Mixed Berries', 'Sparkling Water', 'Honey'],
-      imageUrl: '',
-      concept: 'refreshing'
-    },
-    {
-      id: 'mocktail-6',
-      name: 'Coconut Dream',
-      description: 'Creamy coconut milk blended with tropical fruits and garnished with toasted coconut flakes',
-      price: 8.49,
-      category: 'Mocktails',
-      isVeg: true,
-      ingredients: ['Coconut Milk', 'Pineapple', 'Banana', 'Coconut Flakes'],
-      imageUrl: '',
-      concept: 'tropical'
+      id: 'spicy',
+      name: 'Spicy Style',
+      type: 'spicy',
+      items: [
+        {
+          id: 'spicy-mango',
+          name: 'Spicy Mango',
+          description: 'Fiery mango with jalapeño and tajín rim',
+          price: 8.49,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Mango', 'Jalapeño', 'Tajín', 'Lime'],
+          imageUrl: '',
+          categoryType: 'spicy',
+          signature: true
+        },
+        {
+          id: 'chilli-guava',
+          name: 'Chilli Guava',
+          description: 'Sweet guava with green chili and chat masala',
+          price: 8.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Guava', 'Green Chili', 'Chat Masala', 'Lemon'],
+          imageUrl: '',
+          categoryType: 'spicy'
+        },
+        {
+          id: 'masala-martini',
+          name: 'Masala Martini',
+          description: 'Spiced blend with cumin, black salt, and mint',
+          price: 8.99,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Cumin', 'Black Salt', 'Mint', 'Lemon'],
+          imageUrl: '',
+          categoryType: 'spicy'
+        },
+        {
+          id: 'spiced-jamun',
+          name: 'Spiced Jamun',
+          description: 'Dark jamun with roasted spices and rock salt',
+          price: 8.49,
+          category: 'Mocktails',
+          isVeg: true,
+          ingredients: ['Jamun', 'Roasted Spices', 'Rock Salt', 'Mint'],
+          imageUrl: '',
+          categoryType: 'spicy'
+        }
+      ]
     }
   ];
 
+  const handleCategorySelect = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    const category = categories.find(c => c.id === categoryId);
+    if (category && category.items.length > 0) {
+      const firstItem = category.items[0];
+      setActiveMocktail(firstItem.id);
+      setDisplayMocktail(firstItem);
+    }
+  };
+
+  const handleMocktailSelect = (mocktailId: string) => {
+    setActiveMocktail(mocktailId);
+    const mocktail = categories.flatMap(c => c.items).find(item => item.id === mocktailId);
+    if (mocktail) {
+      setDisplayMocktail(mocktail);
+    }
+  };
+
+  // Initialize with first item
   useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const itemId = entry.target.getAttribute('data-item-id');
-          if (itemId) {
-            if (entry.isIntersecting) {
-              setVisibleItems(prev => new Set([...prev, itemId]));
-            } else {
-              setVisibleItems(prev => {
-                const newSet = new Set(prev);
-                newSet.delete(itemId);
-                return newSet;
-              });
-            }
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const elements = document.querySelectorAll('[data-item-id]');
-    elements.forEach((el) => {
-      if (observerRef.current) {
-        observerRef.current.observe(el);
-      }
-    });
-
-    return () => {
-      elements.forEach((el) => {
-        if (observerRef.current) {
-          observerRef.current.unobserve(el);
-        }
-      });
-    };
+    if (categories.length > 0 && categories[0].items.length > 0) {
+      const firstItem = categories[0].items[0];
+      setActiveMocktail(firstItem.id);
+      setDisplayMocktail(firstItem);
+    }
   }, []);
 
   return (
-    <section className="bg-background min-h-screen">
+    <section className="relative bg-background min-h-screen overflow-hidden">
       {/* Header */}
-      <div className="relative py-16 text-center bg-gradient-to-br from-primary/5 to-secondary/5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--primary),0.1),transparent_50%)]" />
+      <div className="relative py-12 text-center bg-gradient-to-br from-primary/10 to-accent/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--primary),0.15),transparent_60%)]" />
         <div className="relative z-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-primary mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-3">
             Signature Mocktails
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
             We recommend trying our specials — and yes, we're happy to go easy or bold on the spice 🌶️!
           </p>
         </div>
       </div>
 
-      {/* Mocktail Cards */}
+      {/* Category Navigation */}
+      <CategoryNavigation
+        categories={categories}
+        activeCategory={activeCategory}
+        activeMocktail={activeMocktail}
+        onCategorySelect={handleCategorySelect}
+        onMocktailSelect={handleMocktailSelect}
+      />
+
+      {/* Main Display */}
       <div className="relative">
-        {mocktails.map((mocktail, index) => (
-          <div
-            key={mocktail.id}
-            data-item-id={mocktail.id}
-            className="relative"
-          >
-            <MocktailCard
-              mocktail={mocktail}
-              isInView={visibleItems.has(mocktail.id)}
-              addToCart={addToCart}
-              cartQuantity={getCartQuantity(mocktail.id)}
-              updateQuantity={updateQuantity}
-            />
-            
-            {/* Separator */}
-            {index < mocktails.length - 1 && (
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-            )}
-          </div>
-        ))}
+        {displayMocktail && (
+          <MocktailDisplay
+            mocktail={displayMocktail}
+            addToCart={addToCart}
+            cartQuantity={getCartQuantity(displayMocktail.id)}
+            updateQuantity={updateQuantity}
+          />
+        )}
       </div>
     </section>
   );
