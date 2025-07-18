@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Plus, Minus, ShoppingCart, Star } from 'lucide-react';
+import { Plus, Minus, ShoppingCart, Star, Droplets } from 'lucide-react';
 import { useCart, MenuItem } from '../hooks/useCart';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import MocktailSection from '../components/MocktailSection';
 
 const Menu = () => {
   const [filter, setFilter] = useState<'all' | 'veg' | 'non-veg'>('all');
@@ -209,7 +210,7 @@ const Menu = () => {
     { id: 'dessert-5', name: 'Rice Kheer', description: '', price: 5.99, category: 'Desserts', isVeg: true },
   ];
 
-  const categories = ['all', ...Array.from(new Set(menuItems.map(item => item.category)))];
+  const categories = ['all', 'mocktails', ...Array.from(new Set(menuItems.map(item => item.category)))];
 
   const filteredItems = menuItems.filter(item => {
     const categoryMatch = selectedCategory === 'all' || item.category === selectedCategory;
@@ -229,147 +230,159 @@ const Menu = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="pt-20 pb-12">
-        <div className="container mx-auto px-4">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-restaurant-brown mb-4">Our Menu</h1>
-            <p className="text-xl text-muted-foreground mb-6">Discover our authentic Hyderabadi flavors</p>
-            
-            {/* Spice Level Callout */}
-            <div className="bg-restaurant-light-gold/20 border border-restaurant-gold/30 rounded-lg p-4 max-w-2xl mx-auto">
-              <p className="text-restaurant-brown font-medium">
-                🌶️ We recommend trying our specials — and yes, we're happy to go easy or bold on the spice! 🌶️
-              </p>
+      {/* Show Mocktail Section or Regular Menu */}
+      {selectedCategory === 'mocktails' ? (
+        <MocktailSection />
+      ) : (
+        <div className="pt-20 pb-12">
+          <div className="container mx-auto px-4">
+            {/* Header */}
+            <div className="text-center mb-12">
+              <h1 className="text-4xl md:text-5xl font-bold text-restaurant-brown mb-4">Our Menu</h1>
+              <p className="text-xl text-muted-foreground mb-6">Discover our authentic Hyderabadi flavors</p>
+              
+              {/* Spice Level Callout */}
+              <div className="bg-restaurant-light-gold/20 border border-restaurant-gold/30 rounded-lg p-4 max-w-2xl mx-auto">
+                <p className="text-restaurant-brown font-medium">
+                  🌶️ We recommend trying our specials — and yes, we're happy to go easy or bold on the spice! 🌶️
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Filters */}
-          <div className="mb-8 space-y-4">
-            <div className="flex flex-wrap gap-2 justify-center">
-              {categories.map((category) => (
+            {/* Filters */}
+            <div className="mb-8 space-y-4">
+              <div className="flex flex-wrap gap-2 justify-center">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      selectedCategory === category
+                        ? 'bg-restaurant-gold text-white'
+                        : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
+                    } ${category === 'mocktails' ? 'relative overflow-hidden' : ''}`}
+                  >
+                    {category === 'mocktails' && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 via-amber-400/20 to-orange-400/20 animate-gradient-x" />
+                    )}
+                    <span className="relative flex items-center gap-1">
+                      {category === 'mocktails' && <Droplets className="w-4 h-4" />}
+                      {category === 'all' ? 'All Categories' : 
+                       category === 'mocktails' ? 'Signature Mocktails' : category}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            
+              <div className="flex gap-2 justify-center">
                 <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => setFilter('all')}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === category
-                      ? 'bg-restaurant-gold text-white'
+                    filter === 'all'
+                      ? 'bg-restaurant-brown text-white'
                       : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
                   }`}
                 >
-                  {category === 'all' ? 'All Categories' : category}
+                  All
                 </button>
-              ))}
+                <button
+                  onClick={() => setFilter('veg')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filter === 'veg'
+                      ? 'bg-restaurant-brown text-white'
+                      : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
+                  }`}
+                >
+                  🟢 Vegetarian
+                </button>
+                <button
+                  onClick={() => setFilter('non-veg')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filter === 'non-veg'
+                      ? 'bg-restaurant-brown text-white'
+                      : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
+                  }`}
+                >
+                  🔴 Non-Vegetarian
+                </button>
+              </div>
             </div>
-            
-            <div className="flex gap-2 justify-center">
-              <button
-                onClick={() => setFilter('all')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  filter === 'all'
-                    ? 'bg-restaurant-brown text-white'
-                    : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
-                }`}
-              >
-                All
-              </button>
-              <button
-                onClick={() => setFilter('veg')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  filter === 'veg'
-                    ? 'bg-restaurant-brown text-white'
-                    : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
-                }`}
-              >
-                🟢 Vegetarian
-              </button>
-              <button
-                onClick={() => setFilter('non-veg')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  filter === 'non-veg'
-                    ? 'bg-restaurant-brown text-white'
-                    : 'bg-card text-restaurant-brown hover:bg-restaurant-light-gold'
-                }`}
-              >
-                🔴 Non-Vegetarian
-              </button>
-            </div>
-          </div>
 
-          {/* Menu Items */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((item) => {
-              const currentQuantity = getCartQuantity(item.id, item.option);
-              const itemKey = `${item.id}-${item.option || 'default'}`;
-              
-              return (
-                <div key={itemKey} className="bg-card rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 border border-border hover:border-restaurant-gold/50">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-restaurant-brown">{item.name}</h3>
-                      {item.isSpecial && (
-                        <div className="flex items-center gap-1 bg-restaurant-gold text-white px-2 py-1 rounded-full text-xs font-medium">
-                          <Star className="w-3 h-3" />
-                          Special
+            {/* Menu Items */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredItems.map((item) => {
+                const currentQuantity = getCartQuantity(item.id, item.option);
+                const itemKey = `${item.id}-${item.option || 'default'}`;
+                
+                return (
+                  <div key={itemKey} className="bg-card rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 border border-border hover:border-restaurant-gold/50">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold text-restaurant-brown">{item.name}</h3>
+                        {item.isSpecial && (
+                          <div className="flex items-center gap-1 bg-restaurant-gold text-white px-2 py-1 rounded-full text-xs font-medium">
+                            <Star className="w-3 h-3" />
+                            Special
+                          </div>
+                        )}
+                      </div>
+                      <span className={`text-lg ${item.isVeg ? 'text-green-600' : 'text-red-600'}`}>
+                        {item.isVeg ? '🟢' : '🔴'}
+                      </span>
+                    </div>
+                    
+                    {item.description && (
+                      <p className="text-muted-foreground text-sm mb-3 line-clamp-2">{item.description}</p>
+                    )}
+                    
+                    {item.spiceLevel && (
+                      <div className="mb-3">
+                        {getSpiceLevel(item.spiceLevel)}
+                      </div>
+                    )}
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-xl font-bold text-restaurant-gold">${item.price}</span>
+                      
+                      {currentQuantity > 0 ? (
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleQuantityChange(item, currentQuantity - 1)}
+                            className="w-8 h-8 rounded-full bg-restaurant-light-gold text-restaurant-brown flex items-center justify-center hover:bg-restaurant-gold hover:text-white transition-colors"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </button>
+                          <span className="font-semibold min-w-[20px] text-center text-restaurant-brown">{currentQuantity}</span>
+                          <button
+                            onClick={() => handleQuantityChange(item, currentQuantity + 1)}
+                            className="w-8 h-8 rounded-full bg-restaurant-light-gold text-restaurant-brown flex items-center justify-center hover:bg-restaurant-gold hover:text-white transition-colors"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
                         </div>
+                      ) : (
+                        <button
+                          onClick={() => handleAddToCart(item)}
+                          className="bg-restaurant-gold hover:bg-restaurant-brown text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                        >
+                          <ShoppingCart className="w-4 h-4" />
+                          Add to Cart
+                        </button>
                       )}
                     </div>
-                    <span className={`text-lg ${item.isVeg ? 'text-green-600' : 'text-red-600'}`}>
-                      {item.isVeg ? '🟢' : '🔴'}
-                    </span>
                   </div>
-                  
-                  {item.description && (
-                    <p className="text-muted-foreground text-sm mb-3 line-clamp-2">{item.description}</p>
-                  )}
-                  
-                  {item.spiceLevel && (
-                    <div className="mb-3">
-                      {getSpiceLevel(item.spiceLevel)}
-                    </div>
-                  )}
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold text-restaurant-gold">${item.price}</span>
-                    
-                    {currentQuantity > 0 ? (
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => handleQuantityChange(item, currentQuantity - 1)}
-                          className="w-8 h-8 rounded-full bg-restaurant-light-gold text-restaurant-brown flex items-center justify-center hover:bg-restaurant-gold hover:text-white transition-colors"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </button>
-                        <span className="font-semibold min-w-[20px] text-center text-restaurant-brown">{currentQuantity}</span>
-                        <button
-                          onClick={() => handleQuantityChange(item, currentQuantity + 1)}
-                          className="w-8 h-8 rounded-full bg-restaurant-light-gold text-restaurant-brown flex items-center justify-center hover:bg-restaurant-gold hover:text-white transition-colors"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => handleAddToCart(item)}
-                        className="bg-restaurant-gold hover:bg-restaurant-brown text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-                      >
-                        <ShoppingCart className="w-4 h-4" />
-                        Add to Cart
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {filteredItems.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-xl text-muted-foreground">No items found matching your criteria.</p>
+                );
+              })}
             </div>
-          )}
+
+            {filteredItems.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-xl text-muted-foreground">No items found matching your criteria.</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       
       <Footer />
     </div>
